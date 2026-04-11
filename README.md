@@ -13,7 +13,8 @@ curl -fsSL https://raw.githubusercontent.com/Lovinoes/autoinstallers/main/minecr
 sudo bash installer.sh
 ```
 
-![Termius_wtjQ8ZFAOV](https://github.com/user-attachments/assets/29ff3047-a8bb-4a5c-b5dc-97b2cf000bb9)
+![Termius](https://github.com/user-attachments/assets/e019d6ca-9bbe-4a1e-ae47-a2ddbc2f02ab)
+
 
 
 ## License
