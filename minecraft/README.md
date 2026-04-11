@@ -3,7 +3,7 @@ A lightweight shell-based installer that deploys a Minecraft Java Edition server
 
 Unlike traditional manual setups, this tool removes the need to install Docker, configure directories, or create a compose file manually.
 
-![Termius_5SzPuysJ29](https://github.com/user-attachments/assets/d08d3080-a864-4105-837d-97fa44ab1806)
+![Termius](https://github.com/user-attachments/assets/d08d3080-a864-4105-837d-97fa44ab1806)
 
 
 ## Prerequisites
