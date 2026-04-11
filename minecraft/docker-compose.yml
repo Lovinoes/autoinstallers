@@ -1,0 +1,31 @@
+# For more Configuration Options:
+# https://docker-minecraft-server.readthedocs.io/en/latest/
+# For custom JVM flags:
+# https://docker-minecraft-server.readthedocs.io/en/latest/configuration/jvm-options/#extra-jvm-options
+# For more Project Types
+# https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    container_name: minecraft
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      # Project (defaults to PaperMC)
+      TYPE: "PAPER"
+      # Some custom JVM Flags below
+      USE_AIKAR_FLAGS: "true"
+      USE_SIMD_FLAGS: "true" # Disable if SIMD causes issues.
+      MEMORY: "4G" # Set the amount of memory you want to allocate. 
+      # RCON Access
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft" # you may want to change this!
+
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - './data:/data'
