@@ -1,0 +1,23 @@
+# My beloved VSCodium
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Shell script temp files
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.old
+
+# Shell execution artifacts 
+*.out
+*.pid
