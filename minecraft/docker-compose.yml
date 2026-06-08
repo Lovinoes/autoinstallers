@@ -1,9 +1,11 @@
 # For more Configuration Options:
 # https://docker-minecraft-server.readthedocs.io/en/latest/
 # For custom JVM flags:
-# https://docker-minecraft-server.readthedocs.io/en/latest/configuration/jvm-options/#extra-jvm-options
-# For more Project Types
+# https://docker-minecraft-server.readthedocs.io/en/latest/configuration/jvm-options/
+# For more Project Types:
 # https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/
+# Versioning:
+# https://docker-minecraft-server.readthedocs.io/en/latest/versions/minecraft/
 
 services:
   minecraft:
@@ -14,17 +16,20 @@ services:
     stdin_open: true
     ports:
       - "25565:25565"
+      # Uncomment the line below and set a strong password before exposing RCON to the internet.
+      # In most cases, exposing RCON publicly is NOT recommended!
+      # - "25575:25575"
     environment:
-      EULA: "TRUE"
-      # Project (defaults to PaperMC)
-      TYPE: "PAPER"
-      # Some custom JVM Flags below
-      USE_AIKAR_FLAGS: "true"
-      USE_SIMD_FLAGS: "true" # Disable if SIMD causes issues.
-      MEMORY: "4G" # Set the amount of memory you want to allocate. 
-      # RCON Access
-      ENABLE_RCON: "true"
-      RCON_PASSWORD: "minecraft" # you may want to change this!
+      EULA: "FALSE"              # Set to "TRUE" to accept the Minecraft EULA
+      TYPE: "PAPER"              # Project type (defaults to PaperMC)
+      VERSION: "LATEST"          # Minecraft version (e.g. "1.12.2"). "latest" uses the newest available version for the selected project type.
+      # JVM configuration
+      USE_AIKAR_FLAGS: "true"    # Aikar flags for improved performance
+      USE_SIMD_FLAGS: "true"     # Disable if SIMD causes issues
+      MEMORY: "2G"               # Amount of RAM allocated to the server
+      # RCON access
+      ENABLE_RCON: "true"        # Set to "false" if you don't need RCON
+      RCON_PASSWORD: "minecraft" # CHANGE THIS BEFORE EXPOSING RCON TO THE INTERNET!
 
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
