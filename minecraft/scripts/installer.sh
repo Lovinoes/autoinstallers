@@ -30,8 +30,6 @@ run_setup() {
 
     echo -e "${BLUE}Select an option:${NC}"
     echo ""
-    echo "[1] Install Minecraft Server"
-    echo ""
     echo "Do you really want to install the Minecraft Server?"
     echo -e "${GRAY}This will automatically install the Docker Engine."
     echo -e "The Docker Compose stack will live under /opt/minecraft.${NC}"
@@ -116,38 +114,69 @@ system_info() {
     echo "Architecture: $(uname -m)"
     echo "Uptime:       $(uptime -p 2>/dev/null || uptime)"
     echo ""
+
+    # Parse lscpu and free once
+    LSCPU=$(lscpu 2>/dev/null)
+    MEMINFO=$(free -h 2>/dev/null)
+
     echo "CPU:"
-    MODEL=$(lscpu | awk -F: '/Model name/ {gsub(/^ +/,"",$2); print $2; exit}')
-    CORES=$(lscpu | awk -F: '
-        /Core\(s\) per socket/ {gsub(/ /,"",$2); c=$2}
-        /Socket\(s\)/ {gsub(/ /,"",$2); s=$2}
-        END {print c*s}
-    ')
-    THREADS=$(lscpu | awk -F: '
-        /Thread\(s\) per core/ {gsub(/ /,"",$2); t=$2}
-        /Core\(s\) per socket/ {gsub(/ /,"",$2); c=$2}
-        /Socket\(s\)/ {gsub(/ /,"",$2); s=$2}
-        END {print t*c*s}
-    ')
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        x86_64|i*86)
+            MODEL=$(echo "$LSCPU" | awk -F: '/Model name/ {gsub(/^[ \t]+/,"",$2); print $2; exit}')
+            CORES=$(echo "$LSCPU" | awk -F: '
+                /Core\(s\) per socket/ {gsub(/ /,"",$2); c=$2}
+                /Socket\(s\)/          {gsub(/ /,"",$2); s=$2}
+                END {print c*s}
+            ')
+            THREADS=$(echo "$LSCPU" | awk -F: '
+                /Thread\(s\) per core/ {gsub(/ /,"",$2); t=$2}
+                /Core\(s\) per socket/ {gsub(/ /,"",$2); c=$2}
+                /Socket\(s\)/          {gsub(/ /,"",$2); s=$2}
+                END {print t*c*s}
+            ')
+            ;;
+        aarch64|armv*|arm64)
+            MODEL=$(echo "$LSCPU" | awk -F: '/Model name/ {gsub(/^[ \t]+/,"",$2); print $2; exit}')
+            if [ -z "$MODEL" ]; then
+                MODEL=$(awk -F: '/^Model\s*:/ {gsub(/^[ \t]+/,"",$2); print $2; exit}' /proc/cpuinfo)
+            fi
+            CORES=$(echo "$LSCPU" | awk -F: '
+                /Core\(s\) per cluster/ {gsub(/ /,"",$2); c=$2}
+                /Cluster\(s\)/          {gsub(/ /,"",$2); s=$2}
+                END {print c*s}
+            ')
+            THREADS=$(echo "$LSCPU" | awk -F: '/^CPU\(s\):/ {gsub(/ /,"",$2); print $2; exit}')
+            ;;
+        *)
+            MODEL=$(echo "$LSCPU" | awk -F: '/Model name/ {gsub(/^[ \t]+/,"",$2); print $2; exit}')
+            CORES=$(nproc --all)
+            THREADS=$(nproc --all)
+            ;;
+    esac
+
+    MODEL=${MODEL:-"Unknown"}
     CORES=${CORES:-$(nproc --all)}
     THREADS=${THREADS:-$(nproc --all)}
+
     echo "  Model:   $MODEL"
     echo "  Cores:   $CORES"
     echo "  Threads: $THREADS"
     echo ""
+
     echo "Memory:"
-    TOTAL_MEM=$(free -h | awk '/Mem:/ {print $2}')
-    USED_MEM=$(free -h  | awk '/Mem:/ {print $3}')
-    FREE_MEM=$(free -h  | awk '/Mem:/ {print $4}')
-    CACHED_MEM=$(free -h | awk '/Mem:/ {print $6}')
-    echo "  Total:  $TOTAL_MEM"
-    echo "  Used:   $USED_MEM"
-    echo "  Free:   $FREE_MEM"
-    echo "  Cached: $CACHED_MEM"
+    echo "  Total:  $(echo "$MEMINFO" | awk '/Mem:/ {print $2}')"
+    echo "  Used:   $(echo "$MEMINFO" | awk '/Mem:/ {print $3}')"
+    echo "  Free:   $(echo "$MEMINFO" | awk '/Mem:/ {print $4}')"
+    echo "  Cached: $(echo "$MEMINFO" | awk '/Mem:/ {print $6}')"
     echo ""
+
     echo "Disks:"
-    df -h --output=source,size,used,avail,pcent,target | awk 'NR==1 {print $0; next} /^\/dev/ {print $0}'
+    df -h --output=source,size,used,avail,pcent,target | \
+        awk 'NR==1 {print $0; next} /^\/dev/ {print $0}' | \
+        column -t
     echo ""
+
     echo -e "${GRAY}Press ENTER to return...${NC}"
     read
 }
