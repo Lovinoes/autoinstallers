@@ -7,7 +7,7 @@ Unlike traditional manual setups, this tool removes the need to install Docker, 
 
 
 ## Prerequisites
-- Linux system (tested on Debian 13 and Fedora 43, 44)
+- Linux system (tested on Debian 13, Fedora 44 and RaspberryPi OS)
 - Root or sudo access
 - At least 2 GB RAM (4 GB recommended)
 - Internet connection
