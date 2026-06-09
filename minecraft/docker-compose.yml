@@ -28,7 +28,7 @@ services:
       USE_SIMD_FLAGS: "true"     # Disable if SIMD causes issues
       MEMORY: "2G"               # Amount of RAM allocated to the server
       # RCON access
-      ENABLE_RCON: "true"        # Set to "false" if you don't need RCON
+      ENABLE_RCON: "false"        # Set to "true" if you want to enable RCON
       RCON_PASSWORD: "minecraft" # CHANGE THIS BEFORE EXPOSING RCON TO THE INTERNET!
 
     volumes:

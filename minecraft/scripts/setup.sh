@@ -78,7 +78,7 @@ services:
       USE_SIMD_FLAGS: "true"     # Disable if SIMD causes issues
       MEMORY: "2G"               # Amount of RAM allocated to the server
       # RCON access
-      ENABLE_RCON: "true"        # Set to "false" if you don't need RCON
+      ENABLE_RCON: "false"        # Set to "true" if you want to enable RCON
       RCON_PASSWORD: "minecraft" # CHANGE THIS BEFORE EXPOSING RCON TO THE INTERNET!
 
     volumes:
@@ -105,19 +105,17 @@ echo ""
 echo "  Stop server:"
 echo "    docker compose down"
 echo ""
-echo "  Console (recommended):"
-echo "    docker exec -it minecraft rcon-cli"
-echo ""
 echo "  Attach live console:"
 echo "    docker attach minecraft"
 echo ""
-echo "  Detach safely (live console):"
-echo "    Ctrl+P then Ctrl+Q"
+echo "  Detach live console safely:"
+echo "    Press Ctrl+P then Ctrl+Q"
 echo ""
 echo "  Full configuration docs:"
 echo "    https://docker-minecraft-server.readthedocs.io/en/latest"
 echo -e "    ${GRAY}Compose dir: /opt/minecraft/${NC}"
 echo ""
+echo -e "${RED}REMINDER: Set EULA to \"TRUE\" in /opt/minecraft/docker-compose.yml before starting the server!${NC}"
 echo -e "${RED}REMINDER: Change the RCON_PASSWORD in /opt/minecraft/docker-compose.yml!${NC}"
 echo ""
 echo -e "${GREEN}All set.${NC}"
